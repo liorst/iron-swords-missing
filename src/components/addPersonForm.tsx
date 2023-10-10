@@ -4,7 +4,9 @@ import { Input } from "./ui/input"
 import { addPerson } from "@/actions"
 import { redirect } from 'next/dist/server/api-utils';
 
+
 // import { useCallback } from "react";
+const Label = ({htmlFor, children}) => <label htmlFor={htmlFor} style={{float: "right"}}>{children}</label>
 
 const ErrorMessage = ({ message }) => (
   <div className="text-red-600">{message}</div>
@@ -69,9 +71,9 @@ const [errorData, setErrorData] = useState({
     }
   }
   return (
-  
+    <div className="w-full md:w-1/2 px-3 mb-6 md:mb- max-w-2xl">
     <form onSubmit={handleSubmit} className="shadow-md rounded px-8 pt-6 pb-8 mb-4">
-			<label htmlFor="firstName">First name (Missing Person)</label>
+			<Label htmlFor="firstName">שם פרטי (נעדר)</Label>
 			<Input
 				type="text"
 				name="firstName"
@@ -79,10 +81,11 @@ const [errorData, setErrorData] = useState({
 				value={formData.firstName}
 				onChange={handleChange}
         required
+        // className="w-full"
 			/>
       <ErrorMessage message={errorData.firstName}/>
 
-			<label htmlFor="lastName">Last name (Missing Person)</label>
+			<Label htmlFor="lastName">שם משפחה (נעדר)</Label>
       <Input
         type="text"
         name="lastName"
@@ -92,15 +95,15 @@ const [errorData, setErrorData] = useState({
         required
       />
       <ErrorMessage message={errorData.lastName}/>
-			{/* <label htmlFor="mp_phone_number">Phone number (Missing Person)</label>
-
+			{/* <label htmlFor="mp_phone_number">טלפון (נעדר)</label>
       <Input
-        type="tel"
-        name="mp_phone_number"
-        placeholder=""
-        value={formData.mp_phone_number}
-        onChange={handleChange}
-      /> */}
+      type="tel"
+      name="mp_phone_number"
+      placeholder=""
+      value={formData.mp_phone_number}
+      onChange={handleChange}
+      />
+      <ErrorMessage message={errorData.lastName}/> */}
 			{/* <label htmlFor="image">Upload a photo of the missing person</label>
       <Input
         type="file"
@@ -108,7 +111,7 @@ const [errorData, setErrorData] = useState({
         placeholder=""
         onChange={handleChange}
       /> */}
-			<label htmlFor="contactName">Contact person's name</label>
+			<Label htmlFor="contactName">שם איש קשר</Label>
       <Input
         type="text"
         name="contactName"
@@ -118,7 +121,7 @@ const [errorData, setErrorData] = useState({
       />
       <ErrorMessage message={errorData.contactName}/>
 
-			<label htmlFor="contactPhone">Contact person's phone number</label>
+			<Label htmlFor="contactPhone">טלפון איש קשר</Label>
       <Input
         type="tel"
         name="contactPhone"
@@ -128,7 +131,7 @@ const [errorData, setErrorData] = useState({
         required
       />
       <ErrorMessage message={errorData.contactPhone}/>
-			<label htmlFor="contactEmail">Contact person's Email address</label>
+			<Label htmlFor="contactEmail">כתובת מייל ליצירת קשר</Label>
       <Input
         type="email"
         name="contactEmail"
@@ -139,7 +142,7 @@ const [errorData, setErrorData] = useState({
       />
       <ErrorMessage message={errorData.contactEmail}/>
 
-			<label htmlFor="lastSeen">Where the missing person was last seen?</label>
+			<Label htmlFor="lastSeen">נצפה לאחרונה</Label>
       <Input
         type="text"
         name="lastSeen"
@@ -149,7 +152,7 @@ const [errorData, setErrorData] = useState({
       />
       <ErrorMessage message={errorData.lastSeen}/>
 
-			<label htmlFor="identifyingDetails">Missing person's identification details (e.g., ID, driver's license number)</label>
+			<Label htmlFor="identifyingDetails">פרטים מזהים</Label>
       <Input
         type="text"
         name="identifyingDetails"
@@ -159,7 +162,7 @@ const [errorData, setErrorData] = useState({
         onChange={handleChange}
       />
 
-			<label htmlFor="notes">Any additional information about the missing person that could be relevant</label>
+			<Label htmlFor="notes">הערות</Label>
       <Input
 			type="text"
         name="notes"
@@ -167,8 +170,11 @@ const [errorData, setErrorData] = useState({
         value={formData.notes}
         onChange={handleChange}
       />
-				<Button type="submit">Submit</Button>
+      <div style={{textAlign: "center"}}>
+				<Button type="submit" className="text-2xl">שׁלח</Button>
+      </div>
     </form>
+    </div>
   );
 };
 
