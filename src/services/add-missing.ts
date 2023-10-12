@@ -1,27 +1,32 @@
 'use server';
-import { uuid } from '@supabase/supabase-js/src/lib/helpers';
+import {createClient} from '@supabase/supabase-js'
+import {Database} from './database.types'
 import {PersonData} from '../app/utils/types';
-import supabase from './supabase';
 
+const supabaseUrl = process.env.SUPABASE_URL || ""
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY || ""
+
+const supabase = createClient<Database>(supabaseUrl, supabaseKey)
 
 export async function insertMissingPerson(props: PersonData){//: Promise<PersonData> {
-  const {firstName, lastSeen, lastName, contactName, identifyingDetails, image, contactPhone, notes} = props
+  const {id, firstName, lastSeen, lastName, contactName, identifyingDetails, image, contactPhone, notes, status, source, contactEmail} = props
   
 
   const {error} = await supabase.from("people").insert({
-    id: uuid(),
+    id,
     contact_name: contactName,
     contact_phone: contactPhone,
     details: identifyingDetails,
-    status: "unknown",
+    status: status,
     first_name: firstName,
-    image: "https://no-image.jpg",
+    image: image,
     last_name: lastName,
     last_seen: lastSeen,
+    source,
     notes,
   })
   
       
-  return {error}
+  return {error, id}
 }
 

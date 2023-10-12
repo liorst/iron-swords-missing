@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { addPerson } from "@/actions"
-import { redirect } from 'next/dist/server/api-utils';
+// import uploadImage  from '@/services/imageUpload'
+import { useRouter } from 'next/navigation'
+ 
 
 
 // import { useCallback } from "react";
@@ -13,6 +15,7 @@ const ErrorMessage = ({ message }) => (
 );
 
 const AddPersonForm = (props) => {
+  const router = useRouter()
   const [formData, setFormData,] = useState({
     firstName: '',
     firstNameErr: '',
@@ -39,6 +42,8 @@ const [errorData, setErrorData] = useState({
     identifyingDetails: '',
     notes: '',
 });
+const [file, setFile] = useState(null);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     // setErrorData({ ...errorData, [e.target.name]: '' });
@@ -47,27 +52,41 @@ const [errorData, setErrorData] = useState({
     const regex = /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
     return regex.test(phoneNumber);
   };
-
+  const handleChangeFile = (e) => {
+    setFile(e.target.files[0]);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(file === null){
+      setErrorData({ ...errorData, image: 'העלה תמונה' });
+      return
+    }
     console.info('Form submitted', formData);
+    const _formData = new FormData()
+    // console.info(file?.constructor.name)
+    _formData.append('image', file);
+    console.info(_formData)
+    for (const [key, value] of Object.entries(formData)) {
+      _formData.append(key, value);
+    }
+
     // if (!formData.contactPhone) {
     // console.warn('Invalid phone number');
-    if (!validatePhoneNumber(formData.contactPhone)) {
-      console.warn('Invalid phone number');
-      setErrorData({ ...errorData, contactPhone: 'Invalid phone number' });
-      return;
-    }
-    return
-    // Submit the form data to your API
+    // if (!validatePhoneNumber(formData.contactPhone)) {
+    //   console.warn('Invalid phone number');
+    //   setErrorData({ ...errorData, contactPhone: 'Invalid phone number' });
+    //   return;
+    // }
     
-    const {error} = await addPerson(formData)
+    
+    // Submit the form data to your API
+    const {id, error} = await addPerson(_formData)
     if (error){
       console.error(error.status, error.message)
     }
     else {
       console.info("Success")
-      // redirect("/")
+      router.push('/profile/' + id)
     }
   }
   return (
@@ -104,13 +123,15 @@ const [errorData, setErrorData] = useState({
       onChange={handleChange}
       />
       <ErrorMessage message={errorData.lastName}/> */}
-			{/* <label htmlFor="image">Upload a photo of the missing person</label>
+			<Label htmlFor="image">העלה תמונות</Label>
       <Input
         type="file"
-        name="mmp_image_upload"
+        name="image"
         placeholder=""
-        onChange={handleChange}
-      /> */}
+        onChange={handleChangeFile}
+      />
+      <ErrorMessage message={errorData.image}/>
+
 			<Label htmlFor="contactName">שם איש קשר</Label>
       <Input
         type="text"
