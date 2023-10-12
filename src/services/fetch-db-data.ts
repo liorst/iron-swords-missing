@@ -35,7 +35,11 @@ export async function fetchDbData(props?: Props): Promise<PersonData[]> {
   let query = isFullName ? `and(${nameQuery})` : `or(${nameQuery})`;
   if (id) query = `or(${idQuery})`;
 
-  const { data = [] } = await supabase.from("people").select("*").or(query);
+  const { data = [] } = await supabase
+    .from("people")
+    .select("*")
+    .or(query)
+    .filter("status", "not.eq", "pending");
 
   // @ts-ignore
   return (

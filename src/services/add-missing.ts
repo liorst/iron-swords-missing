@@ -22,7 +22,7 @@ export async function insertMissingPerson(props: PersonData) {
     notes,
     status,
     source,
-    contactEmail,
+    // contactEmail,
   } = props;
 
   const { error } = await supabase.from("people").insert({
