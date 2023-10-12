@@ -1,12 +1,6 @@
 "use server";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./database.types";
+import supabase from "@/services/supabase-service-role";
 import { PersonData } from "../app/utils/types";
-
-const supabaseUrl = process.env.SUPABASE_URL || "";
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-
-const supabase = createClient<Database>(supabaseUrl, supabaseKey);
 
 export async function insertMissingPerson(props: PersonData) {
   //: Promise<PersonData> {
