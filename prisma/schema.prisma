@@ -1,0 +1,39 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Animal {
+  id                 String   @id @default(uuid())
+  name               String
+  animalType String @default("אחר")
+  contactName        String
+  contactPhone       String
+  status             String   @default("pending")
+  lastSeen           String?
+  identifyingDetails String?
+  imageUrl           String?
+  notes              String?
+  source             String   @default("siteform")
+  updatedAt          DateTime @updatedAt
+}
+
+model Person {
+  id                 String  @id @default(uuid())
+  firstName          String
+  lastName           String
+  image              String?
+  contactName        String
+  contactPhone       String
+  status             String  @default("pending") //"unknown" | "found" | "deceased" | "kidnapped";
+  lastSeen           String
+  identifyingDetails String?
+  imageUrl           String?
+  notes  String?
+  source String?
+  updatedAt DateTime @updatedAt
+}

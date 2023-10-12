@@ -1,24 +1,24 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { fetchData } from "@/actions";
-import PersonData from "../app/utils/types";
+import AnimalData from "@/app/utils/types";
 import { useRef } from "react";
 import debounce from "lodash.debounce";
 import { useCallback } from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import validator from "validator";
-import { cn } from "../lib/utils";
-import CopyButton from "./ui/copy-button";
+import { cn } from "@/lib/utils";
+import CopyButton from "@/components/ui/copy-button";
 import axios from "axios";
-
 const MIN_QUERY_LENGTH = 3;
+
 export function Search({
   setData,
   setMessage,
 }: {
-  setData: (data: PersonData[]) => void;
+  setData: (data: AnimalData[]) => void;
   setMessage: (msg: string) => void;
 }) {
   const searchParams = useSearchParams();
@@ -45,7 +45,9 @@ export function Search({
         setIsLoading(true);
 
         try {
-          const result = (await axios.get(`/api/person/?text=${name}`)).data;
+          const result: AnimalData[] = (
+            await axios.get(`/api/animals?text=${name}`)
+          ).data;
           setData(result);
           setIsResults(result.length > 0);
           setSearchName(name);
@@ -84,7 +86,7 @@ export function Search({
       <Input
         dir="rtl"
         type="search"
-        placeholder="שם פרטי/משפחה (בעברית) ..."
+        placeholder="שם בעל החיים (בעברית) ..."
         className={cn("md:w-[100px] lg:w-[300px]")}
         defaultValue={searchName}
         onChange={onInputChange}
@@ -95,7 +97,7 @@ export function Search({
       {isResults && (
         <CopyButton
           className="mx-4"
-          text={`https://ironswords.org.il/?name=${searchName}`}
+          text={`https://ironswords.org.il/animal/?name=${searchName}`}
         />
       )}
     </div>
