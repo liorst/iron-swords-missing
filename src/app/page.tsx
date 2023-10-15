@@ -4,10 +4,21 @@ import { useState } from "react";
 import { Search } from "../components/search";
 import { SearchResults } from "../components/searchResults";
 import PersonData from "./utils/types";
+import { searchParamsSchema } from "@/lib/validations/search-params";
 
-export default function Home() {
+interface Props {
+  searchParams: {
+    [key: string]: string | string[] | undefined;
+  };
+}
+
+export default function Home({ searchParams }: Props) {
   const [data, setData] = useState<PersonData[]>([]);
   const [message, setMessage] = useState("");
+
+  const { type, query } = searchParamsSchema.parse(searchParams);
+  console.log({ type, query });
+
   return (
     <main className="flex flex-col min-h-screen p-4 sm:p-16">
       <h1 className="text-center text-xl pb-8"> עזרה באיתור נעדרים וחטופים</h1>
