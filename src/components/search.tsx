@@ -1,27 +1,22 @@
 "use client";
-import { Input } from "@/components/ui/input";
+
 import { fetchData } from "@/actions";
-import PersonData from "../app/utils/types";
-import { useRef } from "react";
+import { Input } from "@/components/ui/input";
 import debounce from "lodash.debounce";
-import { useCallback } from "react";
-import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Button } from "./ui/button";
-import validator from "validator";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import PersonData from "../app/utils/types";
 import { cn } from "../lib/utils";
 import CopyButton from "./ui/copy-button";
+import { MessageContext } from "../context/MessageContext";
+import { SearchResultContext } from "../context/SearchResultContext";
 
 const MIN_QUERY_LENGTH = 3;
-export function Search({
-  setData,
-  setMessage,
-}: {
-  setData: (data: PersonData[]) => void;
-  setMessage: (msg: string) => void;
-}) {
+export function Search() {
   const searchParams = useSearchParams();
   const inputValueRef = useRef("");
+
+  const { setData } = useContext(SearchResultContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [searchName, setSearchName] = useState("");
@@ -36,6 +31,7 @@ export function Search({
     onInputChange(event);
   }, [searchParams]);
 
+  const { message, setMessage } = useContext(MessageContext);
   const debouncedSearch = useCallback(
     debounce(async () => {
       const name = inputValueRef.current?.trim();
@@ -45,6 +41,7 @@ export function Search({
 
         try {
           const result = await fetchData({ name });
+
           setData(result);
           setIsResults(result.length > 0);
           setSearchName(name);
@@ -58,7 +55,7 @@ export function Search({
         }
       }
     }, 250),
-    [],
+    [message, setMessage],
   );
 
   function onInputChange(event: React.ChangeEvent<HTMLInputElement>) {

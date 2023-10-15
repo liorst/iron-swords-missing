@@ -1,14 +1,13 @@
 "use client";
-import PersonData from "../app/utils/types";
+import { useContext } from "react";
+import { MessageContext } from "../context/MessageContext";
+import { SearchResultContext } from "../context/SearchResultContext";
 import { PersonCard } from "./person-card";
 
-export function SearchResults({
-  data,
-  message,
-}: {
-  data: PersonData[];
-  message: string;
-}) {
+export function SearchResults() {
+  const { message } = useContext(MessageContext);
+  const { data } = useContext(SearchResultContext);
+
   return data.length === 0 && message ? (
     <p>{message}</p>
   ) : (
