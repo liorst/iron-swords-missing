@@ -128,7 +128,7 @@ export function Search() {
 
       {isResults && (
         <div className="mx-4">
-          <CopyButton />
+          <CopyButton text={window.location.href} />
         </div>
       )}
     </div>

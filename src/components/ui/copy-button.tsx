@@ -1,15 +1,17 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { Tooltip } from "./tooltip";
 
-const CopyButton: React.FC = (props) => {
+type Props = {
+  text: string;
+};
+
+const CopyButton: React.FC<Props> = ({ text }) => {
   const [openTooltip, setOpenTooltip] = React.useState(false);
 
   const onClick = () => {
-    navigator.clipboard.writeText(window.location.href);
-
+    navigator.clipboard.writeText(text);
     setOpenTooltip(true);
     setTimeout(() => setOpenTooltip(false), 1000);
   };
