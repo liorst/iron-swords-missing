@@ -1,6 +1,0 @@
-import React from "react";
-
-export const MessageContext = React.createContext({
-  message: "",
-  setMessage: (message: string) => {},
-});

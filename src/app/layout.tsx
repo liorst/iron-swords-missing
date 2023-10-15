@@ -6,6 +6,7 @@ import NavBar from "../components/nav-bar";
 import Footer from "../components/footer";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
+import Providers from "@/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -64,18 +65,20 @@ export default function RootLayout({
     <>
       <html lang="en" suppressHydrationWarning>
         <body>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NavBar />
-            <Toaster />
-            {children}
-            {process.env.NODE_ENV !== "development" && <Analytics />}
-            <Footer />
-          </ThemeProvider>
+          <Providers>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <NavBar />
+              <Toaster />
+              {children}
+              {process.env.NODE_ENV !== "development" && <Analytics />}
+              <Footer />
+            </ThemeProvider>
+          </Providers>
         </body>
       </html>
     </>
