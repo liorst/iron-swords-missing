@@ -1,19 +1,15 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { Tooltip } from "./tooltip";
 
-type Props = {
-  text: string;
-  className?: string;
-};
-
-const CopyButton: React.FC<Props> = (props) => {
+const CopyButton: React.FC = (props) => {
   const [openTooltip, setOpenTooltip] = React.useState(false);
-  const { text, className } = props;
 
-  const copy = () => {
-    navigator.clipboard.writeText(text);
+  const onClick = () => {
+    navigator.clipboard.writeText(window.location.href);
+
     setOpenTooltip(true);
     setTimeout(() => setOpenTooltip(false), 1000);
   };
@@ -37,12 +33,7 @@ const CopyButton: React.FC<Props> = (props) => {
 
   return (
     <Tooltip open={openTooltip} content={"הועתק !"}>
-      <Button
-        className={className}
-        variant={"outline"}
-        type="button"
-        onClick={copy}
-      >
+      <Button variant={"outline"} type="button" onClick={onClick}>
         {copyIcon}
       </Button>
     </Tooltip>

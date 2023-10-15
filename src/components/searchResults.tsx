@@ -1,4 +1,5 @@
 "use client";
+
 import { useContext } from "react";
 import { MessageContext } from "../context/MessageContext";
 import { SearchResultContext } from "../context/SearchResultContext";

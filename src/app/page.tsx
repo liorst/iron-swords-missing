@@ -5,22 +5,14 @@ import { useState } from "react";
 import { Search } from "../components/search";
 import { SearchResults } from "../components/searchResults";
 import PersonData from "./utils/types";
-import { searchParamsSchema } from "@/lib/validations/search-params";
+
 import React from "react";
 import { MessageContext } from "../context/MessageContext";
 import { SearchResultContext } from "../context/SearchResultContext";
 
-interface Props {
-  searchParams: {
-    [key: string]: string | string[] | undefined;
-  };
-}
-
-export default function Home({ searchParams }: Props) {
+export default function Home() {
   const [data, setData] = useState<PersonData[]>([]);
   const [message, setMessage] = useState("");
-
-  const { type, query } = searchParamsSchema.parse(searchParams);
 
   return (
     <MessageContext.Provider value={{ message, setMessage }}>
