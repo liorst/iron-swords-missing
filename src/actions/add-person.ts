@@ -48,6 +48,6 @@ export async function addPerson(params: FormData) {
     contact_phone,
     notes,
     status,
-    source: "",
+    source: "web-form",
   });
 }

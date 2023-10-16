@@ -16,8 +16,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { addPerson } from "@/actions";
 
-const upTo = (max: number) => z.string().max(max, `עד ${max} תווים`);
-const atLeast = (min: number) => z.string().min(min, `לפחות ${min} תווים`);
 const between = (min: number, max: number) =>
   z.string().min(min, `לפחות ${min} תווים`).max(max, `עד ${max} תווים`);
 const phone = z
@@ -38,6 +36,7 @@ const MissingPersonForm = () => {
     last_seen: details,
     identifying_details: details,
     image: z.string(),
+    notes: z.string().optional(),
   });
   type MissingAnimalFormValues = z.infer<typeof formSchema>;
   const form = useForm<MissingAnimalFormValues>({
@@ -50,6 +49,7 @@ const MissingPersonForm = () => {
       last_seen: "",
       identifying_details: "",
       image: "",
+      notes: "",
     },
   });
 
@@ -105,7 +105,7 @@ const MissingPersonForm = () => {
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="לדוגמה: רועי"
+                      placeholder="לדוגמה: ישראל"
                       {...field}
                     />
                   </FormControl>
@@ -118,11 +118,11 @@ const MissingPersonForm = () => {
               name="last_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>שם משפחה </FormLabel>
+                  <FormLabel>שם משפחה</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="לדוגמה: משה"
+                      placeholder="לדוגמה: ישראלי"
                       {...field}
                     />
                   </FormControl>
@@ -136,27 +136,9 @@ const MissingPersonForm = () => {
               name="contact_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>שם איש קשר </FormLabel>
+                  <FormLabel>שם איש הקשר</FormLabel>
                   <FormControl>
                     <Input disabled={loading} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>תמונה </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      name="image"
-                      placeholder=""
-                      onChange={handleChangeFile}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -167,12 +149,30 @@ const MissingPersonForm = () => {
               name="contact_phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>מספר הטלפון של איש קשר</FormLabel>
+                  <FormLabel>מספר הטלפון של איש הקשר</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
                       {...field}
                       placeholder="לדוגמה: 0501111111"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>תמונה</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      name="image"
+                      placeholder=""
+                      onChange={handleChangeFile}
                     />
                   </FormControl>
                   <FormMessage />
@@ -198,6 +198,19 @@ const MissingPersonForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>פרטי זיהוי של הנעדר</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>הערות</FormLabel>
                   <FormControl>
                     <Input disabled={loading} {...field} />
                   </FormControl>

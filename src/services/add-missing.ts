@@ -1,6 +1,8 @@
 "use server";
 
-import { prisma } from "./prisma";
+import { Database } from "./db";
+
 export async function createMissingPerson(data: any) {
-  return await prisma.person.create({ data });
+  const db = new Database();
+  return await db.createPerson(data);
 }

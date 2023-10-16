@@ -13,6 +13,7 @@ export async function uploadImage(recordId, filename, fileStream: any) {
   if (error && error?.statusCode === "409") {
     // Duplicate file, do nothing
   } else if (error && error?.statusCode !== "200") {
+    console.log(error);
     throw new Error(error.statusCode);
   }
   const publicUrl = await supabase.storage
