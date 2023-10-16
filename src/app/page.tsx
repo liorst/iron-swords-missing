@@ -12,8 +12,8 @@ import { api } from "@/trpc/react";
 export default function Home() {
   const [query] = useAtom(queryAtom);
   const debouncedSearch = useDebounce(query, 500);
-  const res = api.people.search.useQuery({ query: debouncedSearch });
 
+  const res = api.people.search.useQuery({ query: debouncedSearch });
   const data = res.data ?? [];
 
   return (

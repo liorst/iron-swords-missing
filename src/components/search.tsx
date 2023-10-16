@@ -22,6 +22,7 @@ export function Search() {
   });
 
   const [, setQuery] = useAtom(queryAtom);
+  setQuery(query);
 
   const inputValueRef = useRef("");
 
