@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { searchParamsSchema } from "@/lib/validations/search-params";
 import { useAtom } from "jotai";
 import { queryAtom } from "../store";
+import CopyButton from "./ui/copy-button";
 
 export function Search() {
   const searchParams = useSearchParams();
@@ -41,10 +42,7 @@ export function Search() {
     [searchParams],
   );
 
-  function onInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const query = event.target.value;
-    inputValueRef.current = query;
-
+  const updateQuery = () => {
     router.push(
       `${pathname}?${createQueryString({
         query,
@@ -54,7 +52,13 @@ export function Search() {
         scroll: false,
       },
     );
+  };
 
+  function onInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const query = event.target.value;
+    inputValueRef.current = query;
+
+    updateQuery();
     setQuery(query);
   }
 
@@ -71,11 +75,11 @@ export function Search() {
         iconSrc={"/search.svg"}
       />
 
-      {/* {data && (
+      {query && (
         <div className="mx-4">
           <CopyButton text={window.location.href} />
         </div>
-      )} */}
+      )}
     </div>
   );
 }
