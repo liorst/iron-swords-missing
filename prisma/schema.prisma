@@ -8,7 +8,7 @@ generator client {
 }
 
 model Animal {
-  id                 String   @id @default(uuid())
+  id                 String @unique
   name               String
   animalType String @default("אחר")
   contactName        String
@@ -23,17 +23,16 @@ model Animal {
 }
 
 model Person {
-  id                 String  @id @default(uuid())
-  firstName          String
-  lastName           String
+  id                 String @unique
+  first_name          String
+  last_name           String
   image              String?
-  contactName        String
-  contactPhone       String
+  contact_name        String
+  contact_phone       String
   status             String  @default("pending") //"unknown" | "found" | "deceased" | "kidnapped";
-  lastSeen           String
-  identifyingDetails String?
-  imageUrl           String?
+  last_seen           String?
+  details String?
   notes  String?
   source String?
-  updatedAt DateTime @updatedAt
+  @@map("people")
 }

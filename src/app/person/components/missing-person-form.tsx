@@ -22,29 +22,30 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
+import { addPerson } from "@/actions";
+import { useRouter } from "next/navigation";
 
 const MissingPersonForm = () => {
   const [loading, isLoading] = useState(false);
 
   const formSchema = z.object({
-    firstName: z
+    first_name: z
       .string()
       .min(1, { message: "שם הפרטי צריך להיות יותר מתו אחד" }),
-    lastName: z
+    last_name: z
       .string()
       .min(1, { message: "שם המשפחה צריך להיות יותר מתו אחד" }),
 
-    contactName: z
+    contact_name: z
       .string()
-      .min(1, { message: "שם הבעלים צריך יותר יותר מ-2 תווים" }),
-    contactPhone: z.string().min(8, {
+      .min(1, { message: "שם איש הקשר צריך להיות יותר מתו אחד " }),
+    contact_phone: z.string().min(8, {
       message: "מספר הטלפון צריך להיות מספר ישראלי קווי או נייד תקין",
     }),
-    lastSeen: z
+    last_seen: z
       .string()
-      .min(10, { message: "פרטי המיקום האחרון צריכים להיות תקינים" }),
-    identifyingDetails: z
+      .min(5, { message: "פרטי המיקום האחרון צריכים להיות תקינים" }),
+    identifying_details: z
       .string()
       .min(6, { message: "הפרטים המזהיים צריכים להיות ארוכים מ6 תווים" }),
   });
@@ -52,18 +53,37 @@ const MissingPersonForm = () => {
   const form = useForm<MissingAnimalFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      contactName: "",
-      contactPhone: "",
-      lastSeen: "",
-      identifyingDetails: "",
+      first_name: "",
+      last_name: "",
+      contact_name: "",
+      contact_phone: "",
+      last_seen: "",
+      identifying_details: "",
     },
   });
+  const router = useRouter();
 
-  const onSubmit = async (data: MissingAnimalFormValues) => {
-    console.log(data);
-    await axios.post("/api/person", data);
+  const [file, setFile] = useState(null);
+  const handleChangeFile = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const onSubmit = async (formData: MissingAnimalFormValues) => {
+    console.debug(formData);
+    console.info("Form submitted", formData);
+    const _formData = new FormData();
+    // console.info(file?.constructor.name)
+    _formData.append("image", file);
+    console.info(_formData);
+    for (const [key, value] of Object.entries(formData)) {
+      _formData.append(key, value);
+    }
+
+    // Submit the form data to your API
+    const person = await addPerson(_formData);
+
+    console.info("Success");
+    router.push("/profile/" + person.id);
   };
 
   return (
@@ -77,7 +97,7 @@ const MissingPersonForm = () => {
           <div className="mb-4 flex flex-col gap-8">
             <FormField
               control={form.control}
-              name="firstName"
+              name="first_name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>שם פרטי </FormLabel>
@@ -94,10 +114,10 @@ const MissingPersonForm = () => {
             />
             <FormField
               control={form.control}
-              name="lastName"
+              name="last_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>שם מלא </FormLabel>
+                  <FormLabel>שם משפחה </FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
@@ -112,7 +132,7 @@ const MissingPersonForm = () => {
 
             <FormField
               control={form.control}
-              name="contactName"
+              name="contact_name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>שם איש קשר </FormLabel>
@@ -125,7 +145,25 @@ const MissingPersonForm = () => {
             />
             <FormField
               control={form.control}
-              name="contactPhone"
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>תמונה </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      name="image"
+                      placeholder=""
+                      onChange={handleChangeFile}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="contact_phone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>מספר הטלפון של איש קשר </FormLabel>
@@ -142,10 +180,10 @@ const MissingPersonForm = () => {
             />
             <FormField
               control={form.control}
-              name="lastSeen"
+              name="last_seen"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>איפה החיה נראתה לאחרונה?</FormLabel>
+                  <FormLabel>איפה הנעדר נראת/ה לאחרונה?</FormLabel>
                   <FormControl>
                     <Input disabled={loading} {...field} />
                   </FormControl>
@@ -155,7 +193,7 @@ const MissingPersonForm = () => {
             />
             <FormField
               control={form.control}
-              name="identifyingDetails"
+              name="identifying_details"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>פרטי זיהוי של הנעדר</FormLabel>

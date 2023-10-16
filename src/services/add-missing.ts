@@ -2,36 +2,18 @@
 import supabase from "@/services/supabase-service-role";
 import { PersonData } from "../app/utils/types";
 
-export async function insertMissingPerson(props: PersonData) {
-  //: Promise<PersonData> {
-  const {
-    id,
-    firstName,
-    lastSeen,
-    lastName,
-    contactName,
-    identifyingDetails,
-    image,
-    contactPhone,
-    notes,
-    status,
-    source,
-    // contactEmail,
-  } = props;
+import { prisma } from "./prisma";
+export async function createMissingPerson(data: any) {
+  const person = await prisma.person.create({ data });
 
-  const { error } = await supabase.from("people").insert({
-    id,
-    contact_name: contactName,
-    contact_phone: contactPhone,
-    details: identifyingDetails,
-    status: status,
-    first_name: firstName,
-    image: image,
-    last_name: lastName,
-    last_seen: lastSeen,
-    source,
-    notes,
-  });
+  console.debug(person);
+  return person;
+  // return { error, id };
+}
+export async function createMissingAnimal(data: any) {
+  const person = await prisma.animal.create({ data });
 
-  return { error, id };
+  console.debug(person);
+  return person;
+  // return { error, id };
 }

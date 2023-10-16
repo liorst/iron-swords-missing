@@ -1,39 +1,47 @@
-'use server';
-import { createHash } from 'crypto';
+"use server";
+import { createHash } from "crypto";
 
-import { insertMissingPerson } from '../services/add-missing';
-
-import { uploadImage } from '../services/imageUpload';
+import { uploadImage } from "../services/imageUpload";
+import { insertMissingPerson } from "../services/add-missing";
 
 const generateFileHash = async (stream) => {
-    const hash = createHash('sha256');
-    for await (const chunk of stream) {
-        hash.update(chunk);
-    }
-    return hash.digest('hex');
-}
+  const hash = createHash("sha256");
+  for await (const chunk of stream) {
+    hash.update(chunk);
+  }
+  return hash.digest("hex");
+};
 
 export async function addPerson(params: FormData) {
-    const firstName = params.get('firstName') as string
-    const lastSeen = params.get('lastSeen') as string
-    const lastName = params.get('lastName') as string
-    const contactName = params.get('contactName') as string
-    const identifyingDetails = params.get('identifyingDetails') as string
-    const image = params.get('image') as File
-    const contactPhone = params.get('contactPhone') as string
-    const notes = params.get('notes') as string
-    const contactEmail = params.get('contactEmail') as string
-    
-    // const imageUrl = await uploadImage(image)
-    console.info("Add Person Params", params)
-    const personId = createHash('sha256')
-                    .update([firstName, lastName ,contactName ,contactPhone].join(""))
-                    .digest('hex')
-                    .substring(0, 8).toUpperCase()
-    
-    const fileHash = await generateFileHash(image.stream())
-    const {error, publicUrl} = await uploadImage(personId, fileHash, image);
-    const status = 'pending'
-    return await insertMissingPerson({id: personId, firstName, lastSeen, lastName, contactName, identifyingDetails, image: publicUrl, contactPhone, notes, status, source: "addPersonForm", contactEmail})
-}
+  const first_name = params.get("first_name") as string;
+  const last_seen = params.get("last_seen") as string;
+  const last_name = params.get("last_name") as string;
+  const contact_name = params.get("contact_name") as string;
+  const identifying_details = params.get("identifying_details") as string;
+  const image = params.get("image") as File;
+  const contact_phone = params.get("contact_phone") as string;
+  const notes = params.get("notes") as string;
 
+  console.info("Add Person Params", params);
+  const personId = createHash("sha256")
+    .update([first_name, last_name, contact_name, contact_phone].join(""))
+    .digest("hex")
+    .substring(0, 8)
+    .toUpperCase();
+  const fileHash = await generateFileHash(image.stream());
+  const { error, publicUrl } = await uploadImage(personId, fileHash, image);
+  const status = "pending";
+  return await insertMissingPerson({
+    id: personId,
+    first_name,
+    last_seen,
+    last_name,
+    contact_name,
+    details: identifying_details,
+    image: publicUrl,
+    contact_phone,
+    notes,
+    status,
+    source: "",
+  });
+}
