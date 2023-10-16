@@ -34,9 +34,10 @@ export async function addPerson(params: FormData) {
     .substring(0, 8)
     .toUpperCase();
   const fileHash = await generateFileHash(image.stream());
-  console.log("fileHash", fileHash);
   const { error, publicUrl } = await uploadImage(personId, fileHash, image);
-  const status = "pending";
+  if (error) {
+    throw new Error(error.message);
+  }
   return await createMissingPerson({
     id: personId,
     first_name,
@@ -47,7 +48,7 @@ export async function addPerson(params: FormData) {
     image: publicUrl,
     contact_phone,
     notes,
-    status,
+    status: "pending",
     source: "web-form",
   });
 }

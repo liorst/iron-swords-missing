@@ -2,7 +2,11 @@
 
 import supabase from "@/services/supabase-service-role";
 
-export async function uploadImage(recordId, filename, fileStream: any) {
+export async function uploadImage(
+  recordId: string,
+  filename: string,
+  fileStream: any,
+) {
   const filepath = `public/${recordId}/${filename}`;
   const { error } = await supabase.storage
     .from("people-public")
@@ -10,11 +14,11 @@ export async function uploadImage(recordId, filename, fileStream: any) {
       cacheControl: "3600",
       upsert: false,
     });
-  if (error && error?.statusCode === "409") {
+  if (error && (error as any).statusCode === "409") {
     // Duplicate file, do nothing
-  } else if (error && error?.statusCode !== "200") {
-    console.log(error);
-    throw new Error(error.statusCode);
+  } else if (error && (error as any).statusCode !== "200") {
+    console.error(error, error.message);
+    throw new Error(error.message);
   }
   const publicUrl = await supabase.storage
     .from("people-public")
