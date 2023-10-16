@@ -43,7 +43,7 @@ export function Search() {
     [searchParams],
   );
 
-  const updateQuery = () => {
+  const updateQuery = (query: string) => {
     router.push(
       `${pathname}?${createQueryString({
         query,
@@ -58,8 +58,7 @@ export function Search() {
   function onInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const query = event.target.value;
     inputValueRef.current = query;
-
-    updateQuery();
+    updateQuery(query);
     setQuery(query);
   }
 
