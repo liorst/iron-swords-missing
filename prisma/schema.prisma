@@ -7,20 +7,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Animal {
-  id                 String @unique
-  name               String
-  animalType String @default("אחר")
-  contactName        String
-  contactPhone       String
-  status             String   @default("pending")
-  lastSeen           String?
-  identifyingDetails String?
-  imageUrl           String?
-  notes              String?
-  source             String   @default("siteform")
-  updatedAt          DateTime @updatedAt
-}
+
 
 model Person {
   id                 String @unique
