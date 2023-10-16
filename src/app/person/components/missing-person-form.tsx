@@ -83,7 +83,10 @@ const MissingPersonForm = () => {
     const person = await addPerson(_formData);
 
     console.info("Success");
-    router.push("/profile/" + person.id);
+    alert(
+      `הדיווח נקלט בהצלחה! מזהה הדיווח שלך הוא ${person.id} אנחנו נעבור על הפרטים ונאמת אותם בהקדם האפשרי, תודה!,`,
+    );
+    router.push("/");
   };
 
   return (

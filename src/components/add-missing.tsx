@@ -1,7 +1,7 @@
-'use client';
-import React from "react"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+"use client";
+import React from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function AddMissing() {
   return (
@@ -10,12 +10,13 @@ export function AddMissing() {
       type="button"
       formTarget="_blank"
       // onClick={() => open('https://forms.gle/AW74r2NLcbZcNYpi6')}
-      >
+    >
       <Link
-        href="/add-missing"
-        className="text-sm font-medium transition-colors hover:text-primary">
+        href="/person/form"
+        className="text-sm font-medium transition-colors hover:text-primary"
+      >
         הוסף נעדר
       </Link>
-      </Button>
+    </Button>
   );
 }

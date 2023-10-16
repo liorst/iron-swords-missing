@@ -2,7 +2,7 @@
 import { createHash } from "crypto";
 
 import { uploadImage } from "../services/imageUpload";
-import { insertMissingPerson } from "../services/add-missing";
+import { createMissingPerson } from "../services/add-missing";
 
 const generateFileHash = async (stream) => {
   const hash = createHash("sha256");
@@ -31,7 +31,7 @@ export async function addPerson(params: FormData) {
   const fileHash = await generateFileHash(image.stream());
   const { error, publicUrl } = await uploadImage(personId, fileHash, image);
   const status = "pending";
-  return await insertMissingPerson({
+  return await createMissingPerson({
     id: personId,
     first_name,
     last_seen,
