@@ -11,7 +11,12 @@ import { useAtom } from "jotai";
 import { queryAtom } from "../store";
 import CopyButton from "./ui/copy-button";
 
-export function Search() {
+type Props = {
+  isLoading: boolean;
+  showCopyButton?: boolean;
+};
+
+export function Search({ isLoading, showCopyButton }: Props) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -71,11 +76,11 @@ export function Search() {
         className={cn("md:w-[100px] lg:w-[300px]")}
         defaultValue={query}
         onChange={onInputChange}
-        // isLoading={isLoading}
+        isLoading={isLoading}
         iconSrc={"/search.svg"}
       />
 
-      {query && (
+      {showCopyButton && (
         <div className="mx-4">
           <CopyButton text={window.location.href} />
         </div>

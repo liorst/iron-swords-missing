@@ -13,15 +13,16 @@ export default function Home() {
   const [query] = useAtom(queryAtom);
   const debouncedSearch = useDebounce(query, 500);
 
-  const res = api.people.search.useQuery({ query: debouncedSearch });
-  const data = res.data ?? [];
+  const { data = [], isLoading } = api.people.search.useQuery({
+    query: debouncedSearch,
+  });
 
   return (
     <main className="flex flex-col min-h-screen p-4 sm:p-16">
-      <h1 className="text-center text-xl pb-8"> עזרה באיתור נעדרים וחטופים</h1>
+      <h1 className="text-center text-xl"> עזרה באיתור נעדרים וחטופים</h1>
 
       <div className="flex min-h-screen flex-col items-center gap-6 p-4 sm:p-16">
-        {!query && (
+        {(!query || !data.length) && (
           <Image
             className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert self-center"
             src="/logo.jpg"
@@ -32,8 +33,11 @@ export default function Home() {
           />
         )}
 
-        <Search />
-        <SearchResults data={query ? data : null} />
+        <Search
+          isLoading={isLoading}
+          showCopyButton={data.length > 0 && !!query}
+        />
+        <SearchResults data={data} query={debouncedSearch} />
       </div>
     </main>
   );

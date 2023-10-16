@@ -2,11 +2,17 @@ import PersonData from "@/app/utils/types";
 import { PersonCard } from "./person-card";
 
 type Props = {
-  data: PersonData[] | null;
+  data: PersonData[];
+  query: string;
 };
+const MIN_QUERY_LENGTH = 3;
 
-export const SearchResults: React.FC<Props> = ({ data }) => {
-  if (data?.length === 0) {
+export const SearchResults: React.FC<Props> = ({ data, query }) => {
+  if (!data.length && query && query.length < MIN_QUERY_LENGTH) {
+    return <div>יש להזין לפחות 3 אותיות</div>;
+  }
+
+  if (!data.length && !!query) {
     return <div>לא נמצאו תוצאות</div>;
   }
 
