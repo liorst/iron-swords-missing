@@ -7,6 +7,9 @@ import Footer from "../components/footer";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/providers";
+import { TRPCReactProvider } from "../trpc/react";
+import { headers } from "next/headers";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -74,7 +77,12 @@ export default function RootLayout({
             >
               <NavBar />
               <Toaster />
-              {children}
+              <TRPCReactProvider headers={headers()}>
+                {children}
+                {process.env.NODE_ENV === "development" && (
+                  <ReactQueryDevtools initialIsOpen={false} />
+                )}
+              </TRPCReactProvider>
               {process.env.NODE_ENV !== "development" && <Analytics />}
               <Footer />
             </ThemeProvider>

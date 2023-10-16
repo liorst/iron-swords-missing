@@ -11,17 +11,20 @@ export async function POST(request: Request) {
     text?: string;
     type: string;
   } = await request.json();
+
   const { data } = await supabase
     .from("emails_sent")
     .select("last_sent_date")
     .eq("email", emailData.email)
     .eq("type", emailData.type)
     .single();
+
   const updatedEmailData = {
     email: emailData.email,
     type: emailData.type,
     last_sent_date: new Date().toISOString(),
   };
+
   if (data) {
     // limit to 1 email per minute
     const last_sent = new Date(data.last_sent_date);

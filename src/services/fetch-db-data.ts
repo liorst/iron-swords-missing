@@ -7,6 +7,7 @@ type Props = {
   id?: string;
 };
 const MIN_QUERY_LENGTH = 3;
+
 export async function fetchDbData(props?: Props): Promise<PersonData[]> {
   const { name, id } = props ?? { name: "", id: null };
 
