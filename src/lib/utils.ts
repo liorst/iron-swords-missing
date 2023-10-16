@@ -60,3 +60,5 @@ export const getFullName = (firstName: string, lastName?: string) => {
     (lastName && lastName.toLowerCase() !== "null" ? ` ${lastName}` : "")
   );
 };
+
+export const isProdcution = () => process.env.NODE_ENV === "production";

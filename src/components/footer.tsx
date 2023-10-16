@@ -32,11 +32,11 @@ export default async function Footer() {
             </svg>
           </Link>
 
-          {lastDeployedDate && lastDeployedTime && (
+          {/* {lastDeployedDate && lastDeployedTime && (
             <span className="inline-flex items-center rounded-full bg-blue-700 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-indigo-700/10">
               עודכן לאחרונה ב : {lastDeployedTime} {lastDeployedDate}
             </span>
-          )}
+          )} */}
         </div>
       </div>
     </footer>
