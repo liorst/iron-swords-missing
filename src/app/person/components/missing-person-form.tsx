@@ -6,48 +6,38 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { addPerson } from "@/actions";
-import { useRouter } from "next/navigation";
+
+const upTo = (max: number) => z.string().max(max, `עד ${max} תווים`);
+const atLeast = (min: number) => z.string().min(min, `לפחות ${min} תווים`);
+const between = (min: number, max: number) =>
+  z.string().min(min, `לפחות ${min} תווים`).max(max, `עד ${max} תווים`);
+const phone = z
+  .string()
+  .min(8, "מספר הטלפון חייב להכיל לפחות 8 תווים")
+  .max(15, "מספר הטלפון יכול להכיל עד 15 תווים");
+const name = between(2, 50);
+const details = between(2, 500);
 
 const MissingPersonForm = () => {
-  const [loading, isLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const formSchema = z.object({
-    first_name: z
-      .string()
-      .min(1, { message: "שם הפרטי צריך להיות יותר מתו אחד" }),
-    last_name: z
-      .string()
-      .min(1, { message: "שם המשפחה צריך להיות יותר מתו אחד" }),
-
-    contact_name: z
-      .string()
-      .min(1, { message: "שם איש הקשר צריך להיות יותר מתו אחד " }),
-    contact_phone: z.string().min(8, {
-      message: "מספר הטלפון צריך להיות מספר ישראלי קווי או נייד תקין",
-    }),
-    last_seen: z
-      .string()
-      .min(5, { message: "פרטי המיקום האחרון צריכים להיות תקינים" }),
-    identifying_details: z
-      .string()
-      .min(6, { message: "הפרטים המזהיים צריכים להיות ארוכים מ6 תווים" }),
+    first_name: name,
+    last_name: name,
+    contact_name: name,
+    contact_phone: phone,
+    last_seen: details,
+    identifying_details: details,
+    image: z.string(),
   });
   type MissingAnimalFormValues = z.infer<typeof formSchema>;
   const form = useForm<MissingAnimalFormValues>({
@@ -59,34 +49,42 @@ const MissingPersonForm = () => {
       contact_phone: "",
       last_seen: "",
       identifying_details: "",
+      image: "",
     },
   });
-  const router = useRouter();
 
-  const [file, setFile] = useState(null);
-  const handleChangeFile = (e) => {
-    setFile(e.target.files[0]);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setUploadedFile(file);
+    }
   };
 
   const onSubmit = async (formData: MissingAnimalFormValues) => {
-    console.debug(formData);
-    console.info("Form submitted", formData);
-    const _formData = new FormData();
-    // console.info(file?.constructor.name)
-    _formData.append("image", file);
-    console.info(_formData);
-    for (const [key, value] of Object.entries(formData)) {
-      _formData.append(key, value);
+    if (!uploadedFile) {
+      alert("אנא העלו תמונה");
+      return;
     }
-
-    // Submit the form data to your API
-    const person = await addPerson(_formData);
-
-    console.info("Success");
-    alert(
-      `הדיווח נקלט בהצלחה! מזהה הדיווח שלך הוא ${person.id} אנחנו נעבור על הפרטים ונאמת אותם בהקדם האפשרי, תודה!,`,
-    );
-    router.push("/");
+    setLoading(true);
+    try {
+      const _formData = new FormData();
+      _formData.append("image", uploadedFile);
+      for (const [key, value] of Object.entries(formData)) {
+        _formData.append(key, value);
+      }
+      // Submit the form data to your API
+      const person = await addPerson(_formData);
+      alert(
+        `הדיווח נקלט בהצלחה! מזהה הדיווח שלך הוא ${person.id} אנחנו נעבור על הפרטים ונאמת אותם בהקדם האפשרי, תודה!,`,
+      );
+    } catch (e) {
+      console.error(e);
+      alert("אירעה שגיאה בעת שמירת הנעדר, אנא נסו שנית מאוחר יותר");
+      return;
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -94,7 +92,7 @@ const MissingPersonForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 m-auto text-center"
+          className="space-y-8 mt-8 mb-2 w-80 max-w-screen-lg sm:w-96 m-auto"
           dir="rtl"
         >
           <div className="mb-4 flex flex-col gap-8">
@@ -169,7 +167,7 @@ const MissingPersonForm = () => {
               name="contact_phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>מספר הטלפון של איש קשר </FormLabel>
+                  <FormLabel>מספר הטלפון של איש קשר</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
@@ -186,7 +184,7 @@ const MissingPersonForm = () => {
               name="last_seen"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>איפה הנעדר נראת/ה לאחרונה?</FormLabel>
+                  <FormLabel>איפה הנעדר נראה לאחרונה?</FormLabel>
                   <FormControl>
                     <Input disabled={loading} {...field} />
                   </FormControl>
@@ -208,12 +206,7 @@ const MissingPersonForm = () => {
               )}
             />
           </div>
-          <Button
-            disabled={loading}
-            onClick={() => form.handleSubmit(onSubmit)}
-            className="mx-auto"
-            type="submit"
-          >
+          <Button disabled={loading} className="mx-auto" type="submit">
             שלח
           </Button>
         </form>

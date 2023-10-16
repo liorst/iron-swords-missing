@@ -2,15 +2,12 @@
 
 import { Input } from "@/components/ui/input";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-
 import { useCallback, useRef } from "react";
-
 import { cn } from "@/lib/utils";
 import { searchParamsSchema } from "@/lib/validations/search-params";
 import { useAtom } from "jotai";
 import { queryAtom } from "../store";
 import CopyButton from "./ui/copy-button";
-import axios from "axios";
 
 type Props = {
   isLoading: boolean;
