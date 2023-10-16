@@ -10,7 +10,8 @@
     "test": "vitest",
     "format": "prettier --write .",
     "supabase:gen": "pnpm dlx supabase gen types typescript --project-id jaqqunzflskbrrwzlglq > src/services/database.types.ts",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
