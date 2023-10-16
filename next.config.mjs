@@ -1,9 +1,12 @@
+
+await import("./src/env.mjs");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     serverActions: true,
   },
-  images: {
+  images: { 
     remotePatterns: [
       {
         protocol: "https",
@@ -15,4 +18,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
